@@ -8,9 +8,4 @@
     <Platforms>AnyCPU;x86;x64</Platforms>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Aspose.3D" Version="25.2.0" />
-    <PackageReference Include="MathNet.Numerics" Version="5.0.0" />
-  </ItemGroup>
-
 </Project>

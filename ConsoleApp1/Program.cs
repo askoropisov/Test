@@ -4,7 +4,7 @@ namespace ConsoleApp1
 {
     public static class NativeMethods
     {
-        const string DllName = "calibry_sdk.dll"; // Имя вашей dll
+        const string DllName = "calibry_sdk.dll";
 
         // Структура, соответствующая виртуальному классу Properties
         [StructLayout(LayoutKind.Sequential)]
@@ -14,14 +14,7 @@ namespace ConsoleApp1
         [StructLayout(LayoutKind.Sequential)]
         public struct CalibrySdkObject { }
 
-        // Класс для реализации интерфейса Logger
-        public abstract class Logger
-        {
-            public abstract void Log(string message);
-            public abstract void Error(string message);
-        }
 
-        // Перечисление статуса захвата
         public enum CaptureStatus
         {
             Capture_Status_Error = -1,
@@ -31,13 +24,13 @@ namespace ConsoleApp1
             Capture_Status_Busy = 3
         }; 
 
-                // Возвращает статус захвата
+        // Возвращает статус захвата
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?get_capture_status@calibry_sdk@@YA?AW4CaptureStatus@1@PEAVCalibrySdkObject@1@@Z")]
         public static extern CaptureStatus get_capture_status(IntPtr obj);
 
         // Читает свойства из файла
-        [DllImport(DllName, CallingConvention = CallingConvention.StdCall, EntryPoint = @"?read_properties@calibry_sdk@@YA_NPEAPEAVProperties@1@V?$basic_string_view@DU?$char_traits@D@std@@@std@@@Z")]
-        public static extern bool read_properties(out IntPtr props, string path);
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?read_properties@calibry_sdk@@YA_NPEAPEAVProperties@1@V?$basic_string_view@DU?$char_traits@D@std@@@std@@@Z")]
+        public static extern bool read_properties(out IntPtr props, string pathBytes);
 
         // Создает экземпляр CalibrySdkObject
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?create_calibry_sdk_object@calibry_sdk@@YA_NPEAPEAVCalibrySdkObject@1@PEAVProperties@1@@Z")]
