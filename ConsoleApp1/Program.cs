@@ -25,44 +25,44 @@ namespace ConsoleApp1
         }; 
 
         // Возвращает статус
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?get_capture_status@calibry_sdk@@YA?AW4CaptureStatus@1@PEAVCalibrySdkObject@1@@Z")]
+        [DllImport(DllName)]
         public static extern CaptureStatus get_capture_status(IntPtr obj);
 
         // Читает свойства из файла
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?read_properties@calibry_sdk@@YA_NPEAPEAVProperties@1@V?$basic_string_view@DU?$char_traits@D@std@@@std@@@Z")]
+        [DllImport(DllName)]
         public static extern bool read_properties(out IntPtr props, string pathBytes);
 
         // Создает экземпляр CalibrySdkObject
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?create_calibry_sdk_object@calibry_sdk@@YA_NPEAPEAVCalibrySdkObject@1@PEAVProperties@1@@Z")]
+        [DllImport(DllName)]
         public static extern bool create_calibry_sdk_object(out IntPtr obj, IntPtr properties);
 
         // Устанавливает обработчик логирования
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?set_logger@calibry_sdk@@YA_NPEAVCalibrySdkObject@1@PEAVLogger@1@@Z")]
+        [DllImport(DllName)]
         public static extern bool set_logger(IntPtr obj, IntPtr log);
 
 
         // Инициализирует устройство захвата
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?initialize_capture@calibry_sdk@@YA_NPEAVCalibrySdkObject@1@@Z")]
+        [DllImport(DllName)]
         public static extern bool initialize_capture(IntPtr obj);
 
         // Запускает захват
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?start_capturing@calibry_sdk@@YA_NPEAVCalibrySdkObject@1@@Z")]
+        [DllImport(DllName)]
         public static extern bool start_capturing(IntPtr obj);
 
         // Останавливает захват
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?stop_capturing@calibry_sdk@@YA_NPEAVCalibrySdkObject@1@@Z")]
+        [DllImport(DllName)]
         public static extern bool stop_capturing(IntPtr obj);
 
         // Обрабатывает полученные данные
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?process_scanned_data@calibry_sdk@@YA_NPEAVCalibrySdkObject@1@@Z")]
+        [DllImport(DllName)]
         public static extern bool process_scanned_data(IntPtr obj);
 
         // Сохраняет результат
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?save_result@calibry_sdk@@YA_NPEAVCalibrySdkObject@1@V?$basic_string_view@DU?$char_traits@D@std@@@std@@@Z")]
+        [DllImport(DllName)]
         public static extern bool save_result(IntPtr obj, string path);
 
         // Удаляет экземпляр CalibrySdkObject
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?destroy_calibry_sdk_object@calibry_sdk@@YA_NPEAPEAVCalibrySdkObject@1@@Z")]
+        [DllImport(DllName)]
         public static extern bool destroy_calibry_sdk_object(ref IntPtr obj);
     }
 
@@ -126,23 +126,64 @@ namespace ConsoleApp1
                 {
                     case 'i':
                     case 'I':
-                        NativeMethods.initialize_capture(sdkObjectPointer);
+                        try
+                        {
+                            NativeMethods.initialize_capture(sdkObjectPointer);
+                            Console.WriteLine("Initialize device is success");
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.Message);
+                        }
                         break;
                     case 'c':
                     case 'C':
-                        NativeMethods.start_capturing(sdkObjectPointer);
+                        try
+                        {
+                            NativeMethods.start_capturing(sdkObjectPointer);
+                            Console.WriteLine("Start Scanning");
+                        } 
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.Message);
+                        }
                         break;
                     case 'f':
                     case 'F':
-                        NativeMethods.stop_capturing(sdkObjectPointer);
+                        try
+                        {
+                            NativeMethods.stop_capturing(sdkObjectPointer);
+                            Console.WriteLine("Finish Scanning");
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.Message);
+                        }
                         break;
                     case 'p':
                     case 'P':
-                        NativeMethods.process_scanned_data(sdkObjectPointer);
+                        try
+                        {
+                            Console.WriteLine("Data processing started");
+                            NativeMethods.process_scanned_data(sdkObjectPointer);
+                            Console.WriteLine("Data processing is completed");
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.Message);
+                        }
                         break;
                     case 'v':
                     case 'V':
-                        NativeMethods.save_result(sdkObjectPointer, outputPath);
+                        try
+                        {
+                            NativeMethods.save_result(sdkObjectPointer, outputPath);
+                            Console.WriteLine("Result is saved");
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.Message);
+                        }
                         break;
                     case 's':
                     case 'S':
