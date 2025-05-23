@@ -24,7 +24,7 @@ namespace ConsoleApp1
             Capture_Status_Busy = 3
         }; 
 
-        // Возвращает статус захвата
+        // Возвращает статус
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = @"?get_capture_status@calibry_sdk@@YA?AW4CaptureStatus@1@PEAVCalibrySdkObject@1@@Z")]
         public static extern CaptureStatus get_capture_status(IntPtr obj);
 
