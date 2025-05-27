@@ -32,11 +32,23 @@
             <TextBlock>Количество заходов в красные клетки k</TextBlock>
             <TextBox Width="200" Text="{Binding CountRedVisit}" />
 
+            <TextBlock>Результат</TextBlock>
+            <TextBlock Text="{Binding Result}" />
+
             <Button
+                Width="200"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Bottom"
+                HorizontalContentAlignment="Center"
                 Command="{Binding GenerateMaze}"
-                Content="Generate" />
+                Content="Создать лабиринт" />
+            <Button
+                Width="200"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Bottom"
+                HorizontalContentAlignment="Center"
+                Command="{Binding FindOptimalPath}"
+                Content="Найти путь" />
 
         </StackPanel>
 
@@ -62,17 +74,13 @@
                             <ItemsControl ItemsSource="{Binding}">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
-
-                                        <Rectangle
+                                        <Border
                                             Width="40"
                                             Height="40"
                                             Margin="2"
-                                            Fill="{Binding IsRed, Converter={StaticResource ITBC}}" />
-                                        <!--<TextBlock
-                                            Margin="5"
-                                            FontSize="16"
-                                            Foreground="Blue"
-                                            Text="{Binding}" />-->
+                                            Background="{Binding Color, Converter={StaticResource ITBC}}">
+                                            <TextBlock Foreground="White" Text="{Binding Cost}" />
+                                        </Border>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
