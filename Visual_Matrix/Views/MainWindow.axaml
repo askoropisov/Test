@@ -1,0 +1,86 @@
+<Window
+    x:Class="Visual_Matrix.Views.MainWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converts="using:Visual_Matrix.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:Visual_Matrix.ViewModels"
+    Title="Visual_Matrix"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    x:DataType="vm:MainWindowViewModel"
+    Icon="/Assets/avalonia-logo.ico"
+    mc:Ignorable="d">
+
+
+    <Window.Resources>
+        <converts:IntToBrushConverter x:Key="ITBC" />
+    </Window.Resources>
+
+    <Grid ColumnDefinitions="*, *">
+
+        <StackPanel
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Orientation="Vertical"
+            Spacing="10">
+            <TextBlock>Размер лабиринта</TextBlock>
+            <TextBox Width="200" Text="{Binding RPSize}" />
+            <TextBlock>Процент красных клеток</TextBlock>
+            <TextBox Width="200" Text="{Binding PercentRed}" />
+            <TextBlock>Количество заходов в красные клетки k</TextBlock>
+            <TextBox Width="200" Text="{Binding CountRedVisit}" />
+
+            <Button
+                HorizontalAlignment="Center"
+                VerticalAlignment="Bottom"
+                Command="{Binding GenerateMaze}"
+                Content="Generate" />
+
+        </StackPanel>
+
+        <!--  Внешний контейнер  -->
+        <Viewbox Grid.Column="1">
+            <Border
+                Margin="10"
+                Padding="10"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Background="Silver"
+                BorderThickness="2">
+                <ItemsControl ItemsSource="{Binding RP}">
+
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <ItemsControl ItemsSource="{Binding}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+
+                                        <Rectangle
+                                            Width="40"
+                                            Height="40"
+                                            Margin="2"
+                                            Fill="{Binding IsRed, Converter={StaticResource ITBC}}" />
+                                        <!--<TextBlock
+                                            Margin="5"
+                                            FontSize="16"
+                                            Foreground="Blue"
+                                            Text="{Binding}" />-->
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Border>
+        </Viewbox>
+    </Grid>
+
+</Window>

@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Visual_Matrix": {
+      "commandName": "Project",
+      "commandLineArgs": "in.txt\r\nout.txt"
+    }
+  }
+}
