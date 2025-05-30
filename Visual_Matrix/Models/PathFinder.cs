@@ -1,9 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System;
-using Visual_Matrix.Models;
-using System.Linq;
 using System.Diagnostics;
+using Visual_Matrix.Models;
 
 public class PathFinder
 {
@@ -21,7 +20,7 @@ public class PathFinder
         _rows = _columns = matrix.Count;
     }
 
-    public List<(int, int)> Path = new List<(int, int)> ();
+    public List<(int, int)> Path = new List<(int, int)>();
 
     /// <summary>
     /// Запуск метода поиска оптимального пути
@@ -126,10 +125,10 @@ public class PathFinder
                     if (_cellsMatrix[row][column - 1].Color == 1) remainingRedVisits--;
                 }
                 else if (Path.Count == (_rows + _columns - 2))
-                    {
-                        row = 0;
-                        column = _columns - 1;
-                    }
+                {
+                    row = 0;
+                    column = _columns - 1;
+                }
                 else
                 {
                     throw new Exception("Невозможно восстановить путь");

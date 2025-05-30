@@ -6,10 +6,9 @@ namespace Visual_Matrix.Models
     {
         private int _color;
         public Cell() { }
-        public int Cost { get; set; }      // Стоимость клетки
+        public int Cost { get; set; }
 
-
-        public int Color 
+        public int Color
         {
             get => _color;
             set

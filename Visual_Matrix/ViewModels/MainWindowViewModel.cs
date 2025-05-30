@@ -2,8 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
+using System.ComponentModel.DataAnnotations;
 using Visual_Matrix.Models;
 
 namespace Visual_Matrix.ViewModels
@@ -19,14 +18,24 @@ namespace Visual_Matrix.ViewModels
         {
             Input = args[0];
             Output = args[1];
-            ReadInputFile(Input);
+            (RPSize, PercentRed, CountRedVisit, RP) = FileHelper.ReadInputData(Input);
+
             FindOptimalPath();
         }
 
         public ObservableCollection<ObservableCollection<Cell>> RP { get; set; } = new ObservableCollection<ObservableCollection<Cell>>();
 
+
+        [Required(ErrorMessage = "Поле не должно быть пустым")]
+        [Range(10, 30, ErrorMessage = "Некорректное значение. Укажите число от 10 до 30")]
         public int RPSize { get; set; }
+
+        [Required(ErrorMessage = "Поле не должно быть пустым")]
+        [Range(0, 100, ErrorMessage = "Некорректное значение. Укажите число от 0 до 100")]
         public float PercentRed { get; set; }
+
+        [Required(ErrorMessage = "Поле не должно быть пустым")]
+        [Range(3, 5, ErrorMessage = "Некорректное значение. Укажите число от 3 до 5")]
         public int CountRedVisit { get; set; }
 
         private int _res;
@@ -38,13 +47,15 @@ namespace Visual_Matrix.ViewModels
 
         public void FindOptimalPath()
         {
-            var finder = new PathFinder(RP, CountRedVisit);
+            if (RPSize <= 0 || PercentRed < 0 || CountRedVisit < 0) return;
 
+            var finder = new PathFinder(RP, CountRedVisit);
             start = DateTime.Now.TimeOfDay;
             finder.Solve();
             finish = DateTime.Now.TimeOfDay;
+
             DrawPath(finder.Path);
-            WriteOutputData(finder.Path);
+            FileHelper.WriteOutputData(finder.Path, RPSize, PercentRed, CountRedVisit, Result, (finish - start).TotalMilliseconds, Output);
         }
 
         // Генерация простой случайной матрицы
@@ -65,60 +76,10 @@ namespace Visual_Matrix.ViewModels
             }
         }
 
-        //Функция чтения входного файла
-        private void ReadInputFile(string file)
-        {
-            string[] lines = File.ReadAllLines(file);
-
-            string firstLine = lines[0];
-            string[] property = firstLine.Split(';');
-            RPSize = int.Parse(property[0]);
-            PercentRed = int.Parse(property[1]);
-            CountRedVisit = int.Parse(property[2]);
-
-            ReadCostMatrix(lines.Skip(1).Take(RPSize).ToList());
-            ReadRedMatrix(lines.Skip(RPSize + 1).Take(RPSize).ToArray());
-        }
-
-        //Функция чтения стоимости клеток
-        private void ReadCostMatrix(IEnumerable<string> lines)
-        {
-            RP.Clear();
-            foreach (string line in lines)
-            {
-                string[] values = line.Trim().Split(';');
-                var row = new ObservableCollection<Cell>();
-
-                foreach (string value in values)
-                {
-                    Cell cell = new Cell();
-                    cell.Cost = (int)double.Parse(value);
-                    row.Add(cell);
-                }
-                RP.Add(row);
-            }
-        }
-
-        //Функция чтения красных клеток
-        private void ReadRedMatrix(string[] lines)
-        {
-            for (int i = 0; i < RPSize; i++)
-            {
-                string[] values = lines[i].Trim().Split(' ');
-                for (int j = 0; j < values.Length; j++)
-                {
-                    if (values[j] == "1") RP[i][j].Color = 1;
-                }
-            }
-        }
-
-        //Функция отрисовку пути и расчета его стоимости
+        //Функция отрисовки пути и расчета его стоимости
         private void DrawPath(List<(int, int)> path)
         {
-            if (path.Count == 0)
-            {
-                Result = 0;
-            }
+            if (path.Count == 0) Result = 0;
 
             int res = 0;
             foreach (var item in path)
@@ -128,28 +89,5 @@ namespace Visual_Matrix.ViewModels
             }
             Result = res;
         }
-
-        //Функция записи результатов работы алгоритма в файл
-        private void WriteOutputData(List<(int, int)> path)
-        {
-            string pathPoints = string.Empty;
-            foreach (var cellCoordinate in path)
-            {
-                pathPoints += $"({cellCoordinate.Item1},{cellCoordinate.Item2}); ";
-            }
-
-            using StreamWriter file = new StreamWriter("result.txt");
-
-            file.WriteLine($"Размер лабиринта: {RPSize}");
-            file.WriteLine($"Процент красных клеток: {PercentRed}");
-            file.WriteLine();
-            file.WriteLine($"Сколько раз можно зайти в красные клетки: {CountRedVisit}");
-            file.WriteLine("Найденный путь:");
-            file.WriteLine(pathPoints);
-            file.WriteLine($"Стоимость пути: {Result}");
-            file.WriteLine($"Время, затраченное на вычисление пути: {(finish-start).TotalMilliseconds} мс");
-
-        }
     }
-
 }
