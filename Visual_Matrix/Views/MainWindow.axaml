@@ -26,14 +26,23 @@
             Orientation="Vertical"
             Spacing="10">
             <TextBlock>Размер лабиринта</TextBlock>
-            <TextBox Width="200" Text="{Binding RPSize}" />
+            <TextBox
+                Width="200"
+                Text="{Binding RPSize}"
+                ToolTip.Tip="Размер квадратного лабиринта" />
             <TextBlock>Процент красных клеток</TextBlock>
-            <TextBox Width="200" Text="{Binding PercentRed}" />
+            <TextBox
+                Width="200"
+                Text="{Binding PercentRed}"
+                ToolTip.Tip="Количество красных клеток от общего числа клеток в процентах" />
             <TextBlock>Количество заходов в красные клетки k</TextBlock>
-            <TextBox Width="200" Text="{Binding CountRedVisit}" />
+            <TextBox
+                Width="200"
+                Text="{Binding CountRedVisit}"
+                ToolTip.Tip="Макимальное количество посещения красных клеток" />
 
             <TextBlock>Результат</TextBlock>
-            <TextBlock Text="{Binding Result}" />
+            <TextBlock Text="{Binding Result}" ToolTip.Tip="Суммарная стоимость пути" />
 
             <Button
                 Width="200"
@@ -41,14 +50,16 @@
                 VerticalAlignment="Bottom"
                 HorizontalContentAlignment="Center"
                 Command="{Binding GenerateMaze}"
-                Content="Создать лабиринт" />
+                Content="Создать лабиринт"
+                ToolTip.Tip="Генерация лабиринта с указанными параметрами" />
             <Button
                 Width="200"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Bottom"
                 HorizontalContentAlignment="Center"
                 Command="{Binding FindOptimalPath}"
-                Content="Найти путь" />
+                Content="Найти путь"
+                ToolTip.Tip="Поиск пути в представленном лабиринте" />
 
         </StackPanel>
 
