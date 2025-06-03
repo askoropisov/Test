@@ -3,7 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 using Visual_Matrix.Models;
+using Visual_Matrix.Views;
 
 namespace Visual_Matrix.ViewModels
 {
@@ -13,6 +15,7 @@ namespace Visual_Matrix.ViewModels
         private readonly string Output;
         private TimeSpan start;
         private TimeSpan finish;
+        private MainWindow _mv;
 
         public MainWindowViewModel(string[] args)
         {
@@ -49,31 +52,40 @@ namespace Visual_Matrix.ViewModels
         {
             if (RPSize <= 0 || PercentRed < 0 || CountRedVisit < 0) return;
 
+            Progress.Show();
             var finder = new PathFinder(RP, CountRedVisit);
             start = DateTime.Now.TimeOfDay;
             finder.Solve();
             finish = DateTime.Now.TimeOfDay;
+            Progress.Hide();
 
             DrawPath(finder.Path);
             FileHelper.WriteOutputData(finder.Path, RPSize, PercentRed, CountRedVisit, Result, (finish - start).TotalMilliseconds, Output);
         }
 
         // Генерация простой случайной матрицы
-        public void GenerateMaze()
+        public async void GenerateMaze()
         {
             RP.Clear();
-            for (int i = 0; i < RPSize; i++)
+            Progress.Show();
+
+            await Task.Run(async () =>
             {
-                var row = new ObservableCollection<Cell>();
-                for (int j = 0; j < RPSize; j++)
+                for (int i = 0; i < RPSize; i++)
                 {
-                    Cell cell = new Cell();
-                    cell.Cost = Random.Shared.Next(-10, 51);
-                    cell.Color = Random.Shared.NextDouble() > (1 - PercentRed / 100) ? 1 : 0;
-                    row.Add(cell);
+                    var row = new ObservableCollection<Cell>();
+                    for (int j = 0; j < RPSize; j++)
+                    {
+                        Cell cell = new Cell();
+                        cell.Cost = Random.Shared.Next(-10, 51);
+                        cell.Color = Random.Shared.NextDouble() > (1 - PercentRed / 100) ? 1 : 0;
+                        row.Add(cell);
+                    }
+                    RP.Add(row);
                 }
-                RP.Add(row);
-            }
+            });
+
+            Progress.Hide();
         }
 
         //Функция отрисовки пути и расчета его стоимости
@@ -89,5 +101,7 @@ namespace Visual_Matrix.ViewModels
             }
             Result = res;
         }
+
+        private Progres Progress { get; set; } = new Progres();
     }
 }
